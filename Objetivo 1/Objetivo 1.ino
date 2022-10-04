@@ -9,18 +9,11 @@
 */
 
 #include "Motores.h"
-#include "Linha.h"
 
 /* Tarefas básicas do exemplo */
 void tarefa_1();
-void tarefa_2();
-void go_right();
-void go_left();
-void go_back();
-volatile bool exibir_estado = true;
 
-/* Variavel pra armazenar ultima letra lida */
-char lastRead;
+volatile bool exibir_estado = true;
 
 /* Instâncias das classe dos sensores/atuadores */
 Motores motores;
@@ -32,12 +25,11 @@ void setup() {
   while (!Serial); 
 
   Serial.println("Teste buggy 4x4");
-  Serial.println("f: mover para frente");
-  Serial.println("r: mover para trás");
-  Serial.println("e: mover para esquerda");
-  Serial.println("d: mover para direita");  
+  Serial.println("F: mover para frente");
+  Serial.println("B: mover para trás");
+  Serial.println("L: mover para esquerda");
+  Serial.println("R: mover para direita");  
   Serial.println("s: exibir estado dos sensores a cada 1s");
-  Serial.println("i: exibir descrição das dos estados");
 
   delay(5000);  
 
@@ -45,19 +37,17 @@ void setup() {
 
 /* Loop de atualização do sensores e das tarefas */
 void loop() {
-  if (lastRead != 'H') tarefa_1();
-  else tarefa_2();
+
+  tarefa_1();
 
 }
 
 /* Tarefa 2: comandos da serial */
-void tarefa_1(){
+void tarefa_1() {
 
   /* Caso tenha recebido algum dado do PC */
   if (Serial.available()) {
      char dado_recebido = Serial.read();
-     lastRead = dado_recebido;
-      if (dado_recebido == 'H') return;
       if (dado_recebido == 'S')
           motores.parar();          
       else if (dado_recebido == 'F')
@@ -80,30 +70,4 @@ void tarefa_1(){
       }
 
   }
-}
-
-void tarefa_2()
-{
-  if (obter_esquerda()) go_right();
-  if (obter_direita()) go_left();
-  if (obter_esquerda() && obter_direita()) go_back();
-  if (!obter_esquerda() && !obter_direita()) motores.frente(200);
-}
-
-void go_right()
-{
-  motores.parar();
-  motores.direita(50);
-}
-
-void go_left()
-{
-  motores.parar();
-  motores.esquerda();
-}
-
-void go_back()
-{
-  motores.parar();
-  motores.tras(200);
 }
