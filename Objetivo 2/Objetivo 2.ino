@@ -9,14 +9,18 @@
 */
 
 #include "Motores.h"
+#include "Linha.h"
 
 /* Tarefas básicas do exemplo */
 void tarefa_1();
+void tarefa_2();
 
 volatile bool exibir_estado = true;
+char dado_controle;
 
 /* Instâncias das classe dos sensores/atuadores */
 Motores motores;
+Linha seguidor_linha;
 
 /* Configuração e mensagem inicial */
 void setup() {
@@ -40,6 +44,10 @@ void loop() {
 
   tarefa_1();
 
+  tarefa_2();
+
+  tarefa_exibir_estado();
+
 }
 
 /* Tarefa 2: comandos da serial */
@@ -48,6 +56,7 @@ void tarefa_1() {
   /* Caso tenha recebido algum dado do PC */
   if (Serial.available()) {
      char dado_recebido = Serial.read();
+     dado_controle = dado_recebido;
       if (dado_recebido == 'S')
           motores.parar();          
       else if (dado_recebido == 'F')
@@ -71,3 +80,39 @@ void tarefa_1() {
 
   }
 }
+
+const unsigned long periodo_tarefa_2 = 200;
+unsigned long tempo_tarefa_2 = millis();
+
+void tarefa_2(){
+  unsigned long tempo_atual = millis();
+
+  if(tempo_atual - tempo_tarefa_2 > periodo_tarefa_2) {
+    tempo_tarefa_2 = tempo_atual;
+    if ((dado_controle == 'v' || dado_controle == 'V') && seguidor_linha.obter_esquerda() != 1 && seguidor_linha.obter_direita() != 1)
+        motores.frente(100);
+    if ((dado_controle == 'v' || dado_controle == 'V') && seguidor_linha.obter_esquerda() == 1) {
+        motores.esquerda(100);
+    }
+    if ((dado_controle == 'v' || dado_controle == 'V') && seguidor_linha.obter_direita() == 1) {
+        motores.direita(100);
+    }
+  }
+}
+
+void tarefa_exibir_estado(){
+  static unsigned long tempo_atual = 0;
+
+  /* Escalonamento a cada 1s. Se ativado a exibição */
+  if ((exibir_estado) && (millis() - tempo_atual >= 1000)){
+    
+    Serial.print(seguidor_linha.obter_esquerda());
+    Serial.print("\t");
+    Serial.print(seguidor_linha.obter_direita());
+    
+    Serial.println("");
+    
+    tempo_atual = millis();    
+  }  
+}
+
