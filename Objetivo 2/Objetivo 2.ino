@@ -50,7 +50,7 @@ void loop() {
 
 }
 
-/* Tarefa 2: comandos da serial */
+/* Tarefa 1 - controlar o carrinho via bluetooth */
 void tarefa_1() {
 
   /* Caso tenha recebido algum dado do PC */
@@ -84,6 +84,7 @@ void tarefa_1() {
 const unsigned long periodo_tarefa_2 = 200;
 unsigned long tempo_tarefa_2 = millis();
 
+/* Tarefa 2 - Fazer o carrinho seguir a linha */
 void tarefa_2(){
   unsigned long tempo_atual = millis();
 
@@ -100,6 +101,7 @@ void tarefa_2(){
   }
 }
 
+/* Exibe valor dos sensores IR */
 void tarefa_exibir_estado(){
   static unsigned long tempo_atual = 0;
 

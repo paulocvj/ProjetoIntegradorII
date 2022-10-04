@@ -10,7 +10,7 @@
 
 #include "Motores.h"
 
-/* Tarefas básicas do exemplo */
+/* Tarefas a serem executadas */
 void tarefa_1();
 
 volatile bool exibir_estado = true;
@@ -42,7 +42,7 @@ void loop() {
 
 }
 
-/* Tarefa 2: comandos da serial */
+/* Tarefa 1 - Controlar o carrinho via bluetooth */
 void tarefa_1() {
 
   /* Caso tenha recebido algum dado do PC */
