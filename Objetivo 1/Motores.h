@@ -18,6 +18,8 @@ class Motores
     void esquerda(unsigned char velocidade);
     void direita(unsigned char velocidade);
     void parar();
+    void esquerda_suave(unsigned char velocidade);
+    void direita_suave(unsigned char velocidade);
     
   private:
     /* Pinos de hardware. Suportam analogWrite() */

@@ -28,8 +28,7 @@ void setup() {
   Serial.println("F: mover para frente");
   Serial.println("B: mover para trás");
   Serial.println("L: mover para esquerda");
-  Serial.println("R: mover para direita");  
-  Serial.println("s: exibir estado dos sensores a cada 1s");
+  Serial.println("R: mover para direita");
 
   delay(5000);  
 
@@ -48,6 +47,7 @@ void tarefa_1() {
   /* Caso tenha recebido algum dado do PC */
   if (Serial.available()) {
      char dado_recebido = Serial.read();
+     Serial.print(dado_recebido);
       if (dado_recebido == 'S')
           motores.parar();          
       else if (dado_recebido == 'F')
@@ -55,19 +55,12 @@ void tarefa_1() {
       else if (dado_recebido == 'B')
           motores.tras(200);      
       else if (dado_recebido == 'L')
-          motores.esquerda(150);          
+          motores.esquerda(150);   // testar       
       else if (dado_recebido == 'R')
           motores.direita(150);
-      else if (dado_recebido == 's') {
-        if (exibir_estado == true)
-          exibir_estado = false;
-        else
-          exibir_estado = true;        
-      }
-      
-      if (dado_recebido == 'i') {
-        Serial.println("Bat0\tBat1\tVelocidade\tDistância");
-      }
-
+      else if (dado_recebido == 'G')
+          motores.esquerda_suave(150);
+      else if (dado_recebido == 'I')
+          motores.direita_suave(150);
   }
 }

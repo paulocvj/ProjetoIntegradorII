@@ -32,8 +32,8 @@ void Motores::frente(unsigned char velocidade){
   digitalWrite(M2, HIGH); */
   velocidade &= 0xff;
 
-  analogWrite(M1, velocidade);
-  analogWrite(M2, velocidade);
+  analogWrite(M1N, velocidade);
+  analogWrite(M2N, velocidade);
 
 }
 
@@ -44,8 +44,8 @@ void Motores::tras(unsigned char velocidade){
   /* digitalWrite(M1N, HIGH);
   digitalWrite(M2N, HIGH); */
 
-  analogWrite(M1N, velocidade);
-  analogWrite(M2N, velocidade);
+  analogWrite(M1, velocidade);
+  analogWrite(M2, velocidade);
 
 }
 
@@ -71,4 +71,20 @@ void Motores::esquerda(unsigned char velocidade){
 
   analogWrite(M2, velocidade);
   analogWrite(M1N, velocidade);
+}
+
+void Motores::esquerda_suave(unsigned char velocidade){
+  parar();
+  velocidade &= 0xff;
+
+  analogWrite(M1N, velocidade);
+  analogWrite(M2, 20);
+}
+
+void Motores::direita_suave(unsigned char velocidade){
+  parar();
+  velocidade &= 0xff;
+
+  analogWrite(M2N, velocidade);
+  analogWrite(M1, 20);
 }
