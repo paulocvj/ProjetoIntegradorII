@@ -81,7 +81,7 @@ void tarefa_1() {
   }
 }
 
-const unsigned long periodo_tarefa_2 = 200;
+const unsigned long periodo_tarefa_2 = 2;
 unsigned long tempo_tarefa_2 = millis();
 
 /* Tarefa 2 - Fazer o carrinho seguir a linha */
@@ -91,12 +91,12 @@ void tarefa_2(){
   if(tempo_atual - tempo_tarefa_2 > periodo_tarefa_2) {
     tempo_tarefa_2 = tempo_atual;
     if ((dado_controle == 'v' || dado_controle == 'V') && seguidor_linha.obter_esquerda() != 1 && seguidor_linha.obter_direita() != 1)
-        motores.frente(100);
+        motores.frente(65);
     if ((dado_controle == 'v' || dado_controle == 'V') && seguidor_linha.obter_esquerda() == 1) {
-        motores.esquerda(100);
+        motores.esquerda(200);
     }
     if ((dado_controle == 'v' || dado_controle == 'V') && seguidor_linha.obter_direita() == 1) {
-        motores.direita(100);
+        motores.direita(200);
     }
   }
 }
