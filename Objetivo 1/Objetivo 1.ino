@@ -61,6 +61,6 @@ void tarefa_1() {
       else if (dado_recebido == 'G')
           motores.esquerda_suave(200);
       else if (dado_recebido == 'I')
-          motores.direita_suave(200);
+          motores.direita_suave(200)
   }
 }

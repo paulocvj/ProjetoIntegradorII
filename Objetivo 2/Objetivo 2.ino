@@ -22,6 +22,9 @@ char dado_controle;
 Motores motores;
 Linha seguidor_linha;
 
+/* Variaveis globais */
+volatile bool autonomia = false;
+
 /* Configuração e mensagem inicial */
 void setup() {
   
@@ -67,6 +70,9 @@ void tarefa_1() {
           motores.esquerda(150);          
       else if (dado_recebido == 'R')
           motores.direita(150);
+      else if (dado_recebido == 'v' || dado_recebido == 'V')
+          autonomia = (autonomia == true ? false : true);
+          //autonomia = toggle_autonomia(autonomia);
       else if (dado_recebido == 's') {
         if (exibir_estado == true)
           exibir_estado = false;
@@ -81,22 +87,25 @@ void tarefa_1() {
   }
 }
 
-const unsigned long periodo_tarefa_2 = 2;
+const unsigned long periodo_tarefa_2 = 5;
 unsigned long tempo_tarefa_2 = millis();
 
 /* Tarefa 2 - Fazer o carrinho seguir a linha */
 void tarefa_2(){
   unsigned long tempo_atual = millis();
 
+  int esquerda = seguidor_linha.obter_esquerda();
+  int direita = seguidor_linha.obter_direita();
+
   if(tempo_atual - tempo_tarefa_2 > periodo_tarefa_2) {
     tempo_tarefa_2 = tempo_atual;
-    if ((dado_controle == 'v' || dado_controle == 'V') && seguidor_linha.obter_esquerda() != 1 && seguidor_linha.obter_direita() != 1)
-        motores.frente(65);
-    if ((dado_controle == 'v' || dado_controle == 'V') && seguidor_linha.obter_esquerda() == 1) {
-        motores.esquerda(200);
-    }
-    if ((dado_controle == 'v' || dado_controle == 'V') && seguidor_linha.obter_direita() == 1) {
-        motores.direita(200);
+    if (autonomia) {
+      if (esquerda == 0 && direita == 0)
+          motores.frente(65);
+      else if (esquerda == 1)
+          caso_esquerda();
+      else if (direita == 1)
+          caso_direita();
     }
   }
 }
@@ -118,3 +127,41 @@ void tarefa_exibir_estado(){
   }  
 }
 
+const unsigned long periodo_caso_esq = 100;
+unsigned long tempo_caso_esq = millis();
+
+void caso_esquerda(){
+  unsigned long tempo_atual = millis();
+
+  motores.parar();
+  if(tempo_atual - tempo_caso_esq > periodo_caso_esq)
+  {
+    if(seguidor_linha.obter_esquerda() == 1)
+      motores.esquerda(200);
+    else
+      motores.tras(70);
+  }
+}
+
+const unsigned long periodo_caso_dir = 100;
+unsigned long tempo_caso_dir = millis();
+
+void caso_direita(){
+  unsigned long tempo_atual = millis();
+
+  motores.parar();
+  if(tempo_atual - tempo_caso_dir > periodo_caso_dir)
+  {
+    if(seguidor_linha.obter_direita() == 1)
+      motores.direita(200);
+    else
+      motores.tras(70);
+  }
+}
+
+bool toggle_autonomia(bool autonomia)
+{
+  if (autonomia)
+    return false;
+  return true;
+}
