@@ -37,6 +37,7 @@ void setup() {
   Serial.println("L: mover para esquerda");
   Serial.println("R: mover para direita");  
   Serial.println("s: exibir estado dos sensores a cada 1s");
+  Serial.println("v ou V: Ligar/desligar modo de autonomia (seguidor de linha)");
 
   delay(5000);  
 
@@ -46,9 +47,7 @@ void setup() {
 void loop() {
 
   tarefa_1();
-
   tarefa_2();
-
   tarefa_exibir_estado();
 
 }
@@ -87,7 +86,10 @@ void tarefa_1() {
   }
 }
 
+const unsigned long ciclo_timeout = 400; // 400*5 = 2 segundos
+int contagem_ciclos = 0;
 const unsigned long periodo_tarefa_2 = 5;
+bool ligar_re = false;
 unsigned long tempo_tarefa_2 = millis();
 
 /* Tarefa 2 - Fazer o carrinho seguir a linha */
@@ -100,12 +102,26 @@ void tarefa_2(){
   if(tempo_atual - tempo_tarefa_2 > periodo_tarefa_2) {
     tempo_tarefa_2 = tempo_atual;
     if (autonomia) {
-      if (esquerda == 0 && direita == 0)
-          motores.frente(65);
-      else if (esquerda == 1)
-          caso_esquerda();
-      else if (direita == 1)
-          caso_direita();
+      if (esquerda == 0 && direita == 0 && ligar_re == false) {
+          motores.frente(70);
+          contagem_ciclos++;
+          if (contagem_ciclos >= 400) {
+            contagem_ciclos = 0;
+            ligar_re = true;
+          }
+      }
+      else if (esquerda == 0 && direita == 0 && ligar_re == true)
+          motores.tras(100);
+      else if (esquerda == 1){
+          motores.esquerda(100);
+          ligar_re = false;
+          contagem_ciclos = 0;
+      }
+      else if (direita == 1){
+          motores.direita(100);
+          ligar_re = false;
+          contagem_ciclos = 0;
+      }
     }
   }
 }

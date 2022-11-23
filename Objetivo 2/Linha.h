@@ -13,7 +13,7 @@ class Linha
 {
   public:
     enum LINHA_PINOS {R_TCRT = A4, L_TCRT = A5};
-    static const unsigned int amostras_filto = 100;
+    static const unsigned int amostras_filto = 10;
     volatile static unsigned char esquerda;
     volatile static unsigned char direita;
             
